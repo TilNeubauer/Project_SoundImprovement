@@ -32,3 +32,21 @@ def add_noise(signal, noise_level):
 
     return noisy_signal
 
+
+def add_sig(sig_orig,freq, sr):
+    """overlay a Sin on an existing signal.
+    Args:
+        sig_orig: The original signal.
+        sr: sample rate of original signal
+        freq: the freq of the new sig
+        
+    Returns:
+        A numpy array with the new signal.
+    """  
+
+    l = int(len(sig_orig) / sr)
+    sig = gen_sin_sig(l, freq, sr)
+
+    new_sig = sig_orig + sig
+    
+    return new_sig
