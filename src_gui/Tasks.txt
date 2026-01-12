@@ -1,0 +1,11 @@
+Hochpassfilter
+Tiefpassfilter
+Bandpassfilter
+
+Ausreißer filtern
+
+
+Diagramme von matplot lib in gui einfügen
+Diagramm vorher und nacher
+
+
