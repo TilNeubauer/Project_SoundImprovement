@@ -16,20 +16,36 @@ def plot_AudioSig(sig: NDArray[np.floating], sr):
     plt.grid(True)
     plt.show()
 
+def plot_spectogram(sig, sr):
+    
+    S1 = librosa.feature.melspectrogram(y=sig, sr=sr, n_mels=64)
+    D1 = librosa.power_to_db(S1, ref=np.max)
+    librosa.display.specshow(D1, x_axis='time', y_axis='mel')
+    plt.show()
+
+
+#-------------------------------------------------------------------------------------------------------------------
 
 # Path to src/main.py
 BASE_DIR = Path(__file__).resolve().parent
 
 # Go up to project root, then into Sounds -> filename 
 # Audio file should be Sounds
-audio_path = BASE_DIR.parent / "Sounds" / "RsPaintItBlack_Home.mp3"
+audio_path_1 = BASE_DIR.parent / "Sounds" / "RsPaintItBlack_Home.mp3"
+audio_path_2 = BASE_DIR.parent / "Sounds" / "RsPaintItBlack_orig.mp3"
 
 
 # load Audiofile
 #   sig: Audio sig | 1D np array
 #   sr: sample rate of audio file 
-sig, sr = librosa.load(audio_path)
+sig1, sr1 = librosa.load(audio_path_1)
+sig2, sr2 = librosa.load(audio_path_2)
 
-plot_AudioSig(sig, sr)
+
+plot_AudioSig(sig1, sr1)
+plot_AudioSig(sig2, sr2)
+
+#plot_spectogram(sig1, sr1)
+#plot_spectogram(sig2, sr2)
 
 #print(type(sig))
