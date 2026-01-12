@@ -4,8 +4,14 @@ import matplotlib.pyplot as plt
 from sinSig import gen_sin_sig, add_noise
 from plot import plot_sig_fft_2x
 
+def auto_threshold(fft_sig, n=0.005) -> float:
 
-def denoise_fft(noisy_signal, threshold):
+  ts = max(np.abs(fft_sig)) * n
+
+  return ts
+
+
+def denoise_fft(noisy_signal, threshold=0):
   """Denoises a signal using FFT.
   
 Args:
@@ -16,11 +22,14 @@ Args:
         A numpy array representing the denoised signal.
   """  
   fft_signal = np.fft.fft(noisy_signal)
+
+  if threshold == 0:
+     threshold = auto_threshold(fft_signal)
   fft_signal[np.abs(fft_signal) < threshold] = 0
+
   denoised_signal = np.real(np.fft.ifft(fft_signal))
 
   return denoised_signal
-
 
 
 
