@@ -58,14 +58,15 @@ def plot_fft(sig, sr, ax=None, db=False, normResult=False, title="FFT Spectrum")
 
 
     if db:
-        mag = 20 * np.log10(np.maximum(mag, 1e-12))  # dB, avoid log(0)
+        #mag = 20 * np.log10(np.maximum(mag, 1e-12))  # dB, avoid log(0)
+        mag = 20*np.log10(mag)
 
     ax.plot(freqs_pos, mag)
     ax.set_title(title + (" (dB)" if db else ""))
     ax.set_xlabel("Frequency (Hz)")
     ax.set_ylabel("Magnitude (dB)" if db else "Magnitude")
     #ax.set_xlim(0, sr/2)
-    ax.set_xlim(0, 100)
+    ax.set_xlim(0, 4000)
     ax.grid(True)
 
 
@@ -87,6 +88,30 @@ def plot_spectogram(sig, sr, ax=None, title="Mel Spectrogram", n_mels=64):
 
 # ----------------------- Master-Plot-Funktion -----------------------------
 
+def plot_sig_fft_spec_3x(sig1, sr1, sig2, sr2, sig3, sr3):
+    """
+    Zeigt mehrere Plots in EINEM Fenster.
+    - sig: clean signal
+    - noisy: optional noisy signal
+    """
+  
+    fig, axs = plt.subplots(3, 3, figsize=(16, 8))
+    plot_AudioSig_2(sig1, sr1, ax=axs[0, 0], title="Sig 1 (time)")
+    plot_fft(sig1, sr1, ax=axs[1, 0], db=False, normResult=True, title="Sig 1 (FFT)")
+    plot_spectogram(sig1, sr1, ax=axs[2, 0], title="Spec 1 (time)")
+
+    plot_AudioSig_2(sig2, sr2, ax=axs[0, 1], title="Sig 2 (time)")
+    plot_fft(sig2, sr2, ax=axs[1, 1], db=False, normResult=True, title="Sig 2 (FFT)")
+    plot_spectogram(sig2, sr2, ax=axs[2, 1], title="Spec 2 (time)")
+
+    plot_AudioSig_2(sig3, sr3, ax=axs[0, 2], title="Sig 3 (time)")
+    plot_fft(sig3, sr3, ax=axs[1, 2], db=False, normResult=True, title="Sig 3 (FFT)")
+    plot_spectogram(sig3, sr3, ax=axs[2, 2], title="Spec 3 (time)")
+
+    fig.tight_layout()
+    plt.show()
+
+
 def plot_sig_fft_spec_2x(sig1, sr1, sig2, sr2):
     """
     Zeigt mehrere Plots in EINEM Fenster.
@@ -103,6 +128,27 @@ def plot_sig_fft_spec_2x(sig1, sr1, sig2, sr2):
     plot_fft(sig2, sr2, ax=axs[1, 1], db=False, normResult=True, title="Sig 2 (FFT)")
     plot_spectogram(sig2, sr2, ax=axs[2, 1], title="Signal (time)")
 
+
+    fig.tight_layout()
+    plt.show()
+
+
+def plot_sig_fft_3x(sig1, sr1, sig2, sr2, sig3, sr3):
+    """
+    Zeigt mehrere Plots in EINEM Fenster.
+    - sig: clean signal
+    - noisy: optional noisy signal
+    """
+  
+    fig, axs = plt.subplots(2, 3, figsize=(16, 8))
+    plot_AudioSig_2(sig1, sr1, ax=axs[0, 0], title="Sig 1 (time)")
+    plot_fft(sig1, sr1, ax=axs[1, 0], db=False, normResult=False, title="Sig 1 (FFT)")
+
+    plot_AudioSig_2(sig2, sr2, ax=axs[0, 1], title="Sig 2 (time)")
+    plot_fft(sig2, sr2, ax=axs[1, 1], db=False, normResult=False, title="Sig 2 (FFT)")
+
+    plot_AudioSig_2(sig3, sr3, ax=axs[0, 2], title="Sig 3 (time)")
+    plot_fft(sig3, sr3, ax=axs[1, 2], db=False, normResult=False, title="Sig 3 (FFT)")
 
     fig.tight_layout()
     plt.show()
