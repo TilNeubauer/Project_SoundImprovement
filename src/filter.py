@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sinSig import gen_sin_sig, add_noise
 from plot import plot_sig_fft_2x
 
-def auto_threshold(fft_sig, n=0.005) -> float:
+def auto_threshold(fft_sig, n=0.01) -> float:
 
   ts = max(np.abs(fft_sig)) * n
 
