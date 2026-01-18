@@ -40,53 +40,6 @@ title_label = tk.Label(
 )
 title_label.grid(row=0, column=0, sticky="w", padx=20, pady=20)
 
-"""
-#Button (Insert Audio)--------------------------------------------------------------------------
-def on_button_click_insertdata():
-    file_path = filedialog.askopenfilename(
-        title="Wähle eine Audiodatei aus",
-        filetypes=[("Audio-Dateien", "*.wav *.mp3 *.flac")]
-    )
-    if file_path:
-        print(f"Ausgewählte Datei: {file_path}")
-        # Hier kannst du weitere Verarbeitung hinzufügen, z.B. die Datei laden
-
-load_button = tk.Button(
-    header,
-    text="Audio Datei laden",
-    bg=ACCENT,
-    fg="white",
-    padx=15,
-    pady=5,
-    command = on_button_click_insertdata
-)
-load_button.grid(row=0, column=1, sticky="e", padx=20)
-
-
-#Button (Save Audio)--------------------------------------------------------------------------
-def on_button_click_savedata():
-    file_path = filedialog.askopenfilename(
-        title="Save audiofile",
-        filetypes=[("Audio-Dateien", "*.wav *.mp3 *.flac")]
-    )
-    if file_path:
-        print(f"Ausgewählte Datei: {file_path}")
-        # Hier kannst du weitere Verarbeitung hinzufügen, z.B. die Datei laden
-
-load_button = tk.Button(
-    header,
-    text="Save audio file",
-    bg=ACCENT,
-    fg="white",
-    padx=15,
-    pady=5,
-    command = on_button_click_savedata
-)
-load_button.grid(row=0, column=1, sticky="e", padx=20)
-
-"""
-
-
 
 
 # Main Content---------------------------------------------------------------
@@ -119,6 +72,8 @@ tk.Label(
     fg=FG_TEXT,
     height=8
 ).pack(fill="x", padx=10, pady=(0, 8))
+
+
 
 #Frequency Spectrum Diagram
 tk.Label(
@@ -291,7 +246,7 @@ tk.Frame(output_controls_frame, bg=BG_FRAME).pack(side="right", expand=True)
 
 #Save Button
 def on_button_click_savedata():
-    file_path = filedialog.askopenfolder(
+    file_path = filedialog.askopenfile(
         title="Select an folder to save",
         filetypes=[("Ordner", "*.wav *.mp3 *.flac")]
     )
