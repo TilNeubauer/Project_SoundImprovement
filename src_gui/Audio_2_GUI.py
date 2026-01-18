@@ -40,26 +40,6 @@ title_label = tk.Label(
 )
 title_label.grid(row=0, column=0, sticky="w", padx=20, pady=20)
 
-#Button (Insert Audio)--------------------------------------------------------------------------
-def on_button_click_insertdata():
-    file_path = filedialog.askopenfilename(
-        title="Wähle eine Audiodatei aus",
-        filetypes=[("Audio-Dateien", "*.wav *.mp3 *.flac")]
-    )
-    if file_path:
-        print(f"Ausgewählte Datei: {file_path}")
-        # Hier kannst du weitere Verarbeitung hinzufügen, z.B. die Datei laden
-
-load_button = tk.Button(
-    header,
-    text="Audio Datei laden",
-    bg=ACCENT,
-    fg="white",
-    padx=15,
-    pady=5,
-    command = on_button_click_insertdata
-)
-load_button.grid(row=0, column=1, sticky="e", padx=20)
 
 
 # Main Content---------------------------------------------------------------
@@ -75,6 +55,7 @@ main_frame.columnconfigure(2, weight=1)
 input_frame = tk.Frame(main_frame, bg=BG_FRAME)
 input_frame.grid(row=0, column=0, sticky="nsew", padx=10)
 
+#Input Label
 tk.Label(
     input_frame,
     text="Input Signal",
@@ -83,24 +64,93 @@ tk.Label(
     fg=FG_TEXT
 ).pack(anchor="w", padx=10, pady=10)
 
+#Waveform Diagram
 tk.Label(
     input_frame,
     text="[ Waveform Placeholder ]",
     bg="#000000",
     fg=FG_TEXT,
     height=8
+).pack(fill="x", padx=10, pady=(0, 8))
+
+
+
+#Frequency Spectrum Diagram
+tk.Label(
+    input_frame,
+    text="[ Frequency Spectrum Placeholder ]",
+    bg="#000000",
+    fg=FG_TEXT,
+    height=8
 ).pack(fill="x", padx=10)
 
+# Frame Control and import Buttons-------------
+input_controls_frame = tk.Frame(input_frame, bg=BG_FRAME)
+input_controls_frame.pack(fill="x", padx=10, pady=10)
+
+
+# Import Button
+def on_button_click_insertdata():
+    file_path = filedialog.askopenfilename(
+        title="Select an audio file",
+        filetypes=[("Audio-Dateien", "*.wav *.mp3 *.flac")]
+    )
+    if file_path:
+        print(f"Ausgewählte Datei: {file_path}")
+        # Hier kannst du weitere Verarbeitung hinzufügen, z.B. die Datei laden
+
+load_button = tk.Button(
+    input_controls_frame,
+    text="Import Audio",
+    bg=ACCENT,
+    fg="white",
+    padx=5,
+    pady=5,
+    command = on_button_click_insertdata
+).pack(side="left")
+
+#left Spacer
+tk.Frame(input_controls_frame, bg=BG_FRAME).pack(side="left", expand=True)
+
+#Play Button
+tk.Button(
+    input_controls_frame, 
+    text="Play"
+    ).pack(side="left", padx=5)
+
+#Pause Button
+tk.Button(
+    input_controls_frame, 
+    text="Pause"
+    ).pack(side="left", padx=5)
+
+#right Spacer
+tk.Frame(input_controls_frame, bg=BG_FRAME).pack(side="left", expand=True)
+
+
+
+
+#Samplerate and Duration
 tk.Label(
     input_frame,
     text="Samplerate: 44.1 kHz\nDauer: 00:00",
     font=TEXT_FONT,
     bg=BG_FRAME,
     fg=FG_TEXT,
-    justify="left"
-).pack(anchor="w", padx=10, pady=10)
+    justify="right"
+).pack(anchor="se", padx=10, pady=10)
 
-tk.Button(input_frame, text="Abspielen").pack(pady=10)
+
+#Filename and Size
+tk.Label(
+    input_frame,
+    text="[Filename dummy] [Datatype dummy] [filesize dummy]",
+    font=TEXT_FONT,
+    bg=BG_FRAME,
+    fg=FG_TEXT,
+    justify="left"
+).pack(anchor="w", padx=10, pady=10,)
+
 
 
 # Processing Pipeline---------------------------------------------------------
@@ -136,10 +186,15 @@ tk.Button(
 ).pack(pady=20)
 
 
+
+
+
+
 # Output Signal--------------------------------------------------------------
 output_frame = tk.Frame(main_frame, bg=BG_FRAME)
 output_frame.grid(row=0, column=2, sticky="nsew", padx=10)
 
+#Output Label
 tk.Label(
     output_frame,
     text="Output Signal",
@@ -148,24 +203,94 @@ tk.Label(
     fg=FG_TEXT
 ).pack(anchor="w", padx=10, pady=10)
 
+#Waveform Diagram
 tk.Label(
     output_frame,
     text="[ Processed Waveform Placeholder ]",
     bg="#000000",
     fg=FG_TEXT,
     height=8
+).pack(fill="x", padx=10, pady=(0, 8))
+
+#Frequency Spectrum Diagram
+tk.Label(
+    output_frame,
+    text="[ Frequency Spectrum Placeholder ]",
+    bg="#000000",
+    fg=FG_TEXT,
+    height=8
 ).pack(fill="x", padx=10)
 
+
+# Frame Control and save Buttons-------------
+output_controls_frame = tk.Frame(output_frame, bg=BG_FRAME)
+output_controls_frame.pack(fill="x", padx=10, pady=10)
+
+#left Spacer
+tk.Frame(output_controls_frame, bg=BG_FRAME).pack(side="right", expand=True)
+
+#Play Button
+tk.Button(
+    output_controls_frame, 
+    text="Play"
+    ).pack(side="right", padx=5)
+
+#Pause Button
+tk.Button(
+    output_controls_frame, 
+    text="Pause"
+    ).pack(side="right",padx=5)
+
+#right Spacer
+tk.Frame(output_controls_frame, bg=BG_FRAME).pack(side="right", expand=True)
+
+#Save Button
+def on_button_click_savedata():
+    file_path = filedialog.askopenfile(
+        title="Select an folder to save",
+        filetypes=[("Ordner", "*.wav *.mp3 *.flac")]
+    )
+    if file_path:
+        print(f"Ausgewählte Datei: {file_path}")
+        # Hier kannst du weitere Verarbeitung hinzufügen, z.B. die Datei laden
+
+load_button = tk.Button(
+    output_controls_frame,
+    text="Save Audio",
+    bg=ACCENT,
+    fg="white",
+    padx=5,
+    pady=5,
+    command = on_button_click_savedata
+).pack(side="right")
+
+
+
+#Samplerate and Duration
 tk.Label(
     output_frame,
     text="Samplerate: 44.1 kHz\nDauer: 00:00",
     font=TEXT_FONT,
     bg=BG_FRAME,
     fg=FG_TEXT,
-    justify="left"
-).pack(anchor="w", padx=10, pady=10)
+    justify="right"
+).pack(anchor="se", padx=10, pady=10,)
 
-tk.Button(output_frame, text="Abspielen").pack(pady=10)
+
+
+
+
+#Filename and Size
+tk.Label(
+    output_frame,
+    text="[Filename dummy] [Datatype dummy] [filesize dummy]",
+    font=TEXT_FONT,
+    bg=BG_FRAME,
+    fg=FG_TEXT,
+    justify="left"
+).pack(anchor="w", padx=10, pady=10,)
+
+
 
 
 # Analysis Section-------------------------------------------------------------
@@ -182,7 +307,15 @@ def analysis_box(parent, title):
 
 analysis_box(analysis_frame, "Frequenzspektrum").grid(row=0, column=0, sticky="nsew", padx=10)
 analysis_box(analysis_frame, "Wellenformvergleich").grid(row=0, column=1, sticky="nsew", padx=10)
-analysis_box(analysis_frame, "Dynamik-Messung").grid(row=0, column=2, sticky="nsew", padx=10)
+analysis_box(analysis_frame, "Frequenzspektrum").grid(row=0, column=2, sticky="nsew", padx=10)
+
+
+
+
+
+
+
+
 
 
 # Start-------------------------------------------------------------------------
