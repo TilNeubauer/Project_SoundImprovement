@@ -1,5 +1,5 @@
 import tkinter as tk
-from .config import *
+from .config import BG_FRAME, FG_TEXT
 
 def create_analysis_section(parent):
     frame = tk.Frame(parent, bg=BG_FRAME)
@@ -11,20 +11,9 @@ def create_analysis_section(parent):
         box = tk.Frame(parent, bg="#000000")
         box.grid(row=0, column=col, sticky="nsew", padx=10)
 
-        tk.Label(
-            box,
-            text=title,
-            bg="#000000",
-            fg=FG_TEXT
-        ).pack(anchor="w", padx=5, pady=5)
-
-        tk.Label(
-            box,
-            text="[ Plot Placeholder ]",
-            bg="#000000",
-            fg=FG_TEXT,
-            height=6
-        ).pack(fill="both", expand=True, padx=5, pady=5)
+        tk.Label(box, text=title, bg="#000000", fg=FG_TEXT).pack(anchor="w", padx=5)
+        tk.Label(box, text="[ Plot Placeholder ]",
+                 bg="#000000", fg=FG_TEXT, height=6).pack()
 
     analysis_box(frame, "Frequenzspektrum", 0)
     analysis_box(frame, "Wellenformvergleich", 1)

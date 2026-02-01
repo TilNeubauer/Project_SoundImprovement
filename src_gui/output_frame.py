@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import filedialog
-from .config import *
+from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT
 
 def create_output_frame(parent):
+
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=2, sticky="nsew", padx=10)
 
@@ -33,12 +34,12 @@ def create_output_frame(parent):
     controls = tk.Frame(frame, bg=BG_FRAME)
     controls.pack(fill="x", padx=10, pady=10)
 
-    tk.Frame(controls, bg=BG_FRAME).pack(side="left", expand=True)
+    tk.Frame(controls, bg=BG_FRAME).pack(side="right", expand=True)
 
-    tk.Button(controls, text="Play").pack(side="left", padx=5)
-    tk.Button(controls, text="Pause").pack(side="left", padx=5)
+    tk.Button(controls, text="Play").pack(side="right", padx=5)
+    tk.Button(controls, text="Pause").pack(side="right", padx=5)
 
-    tk.Frame(controls, bg=BG_FRAME).pack(side="left", expand=True)
+    tk.Frame(controls, bg=BG_FRAME).pack(side="right", expand=True)
 
     def save_audio():
         filedialog.askopenfilename(
@@ -67,10 +68,11 @@ def create_output_frame(parent):
 
     tk.Label(
         frame,
-        text="[Filename] [Datatype] [Filesize]",
+        text="[Filename dummy] [Datatype dummy] [filesize dummy]",
         font=TEXT_FONT,
         bg=BG_FRAME,
-        fg=FG_TEXT
+        fg=FG_TEXT,
+        justify="left"
     ).pack(anchor="w", padx=10, pady=10)
 
     return frame

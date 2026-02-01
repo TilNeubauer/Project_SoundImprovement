@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from .config import *
+from .config import BG_FRAME, FG_TEXT, SECTION_FONT, ACCENT
 
 def create_pipeline_frame(parent):
+
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=1, sticky="nsew", padx=10)
 
@@ -25,6 +26,7 @@ def create_pipeline_frame(parent):
         cb = ttk.Combobox(frame, values=values, state="readonly")
         cb.current(0)
         cb.pack(fill="x", padx=10, pady=5)
+        return cb
 
     dropdown("Filter", ["Low Pass", "High Pass", "Band Pass"])
     dropdown("Normalisierung", ["-1 dB", "-3 dB", "-6 dB"])
