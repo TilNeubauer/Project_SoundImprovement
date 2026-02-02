@@ -174,7 +174,6 @@ def create_pipeline_frame(parent):
     sin_button.pack(pady=5)
 
 
-
     # EQUALIZER-------------------------------------------------
     eq_active = False
 
@@ -299,7 +298,6 @@ def create_pipeline_frame(parent):
         command=toggle_eq
     )
     eq_button.pack(pady=(8, 4))
-
 
 
     # Umschalten der sichtbaren Filter---------------------------------
