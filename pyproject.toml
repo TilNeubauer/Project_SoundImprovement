@@ -5,7 +5,7 @@ description = "Default template for PDM package"
 authors = [
     {name = "TilNeubauer", email = "nt1703@mci4me.at"},
 ]
-dependencies = ["librosa>=0.11.0", "matplotlib>=3.10.8"]
+dependencies = ["librosa>=0.11.0", "matplotlib>=3.10.8", "soundfile>=0.13.1", "pysoundfile>=0.9.0.post1", "audioread>=3.1.0", "pydub>=0.25.1"]
 requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
