@@ -1,5 +1,6 @@
 import tkinter as tk
-from .config import BG_FRAME, FG_TEXT, ACCENT
+from .config import BG_FRAME, FG_TEXT
+
 
 def create_analysis_section(parent):
     frame = tk.Frame(parent, bg=BG_FRAME)
@@ -11,15 +12,27 @@ def create_analysis_section(parent):
         box = tk.Frame(parent, bg="#000000")
         box.grid(row=0, column=col, sticky="nsew", padx=10)
 
-        tk.Label(box, text=title, bg="#000000", fg=FG_TEXT).pack(anchor="w", padx=5)
-        tk.Label(box, text="[ Plot Placeholder ]",
-                 bg="#000000", fg=FG_TEXT, height=6).pack()
+        tk.Label(
+            box,
+            text=title,
+            bg="#000000",
+            fg=FG_TEXT
+        ).pack(anchor="w", padx=5)
 
-    #Analysis container left-----------------------------------------
+        tk.Label(
+            box,
+            text="[ Plot Placeholder ]",
+            bg="#000000",
+            fg=FG_TEXT,
+            height=6
+        ).pack()
+
+  
+    # Analysis container LEFT----------------------------
     analysis_box(frame, "Frequenzspektrum", 0)
 
-    #Scrubber container----------------------------------------------
-    # --- Scrubber / Timeline Container ---
+
+    # Scrubber / Timeline container (MITTELTEIL)-----------------------
     scrubber_frame = tk.Frame(frame, bg="#000000")
     scrubber_frame.grid(row=0, column=1, sticky="nsew", padx=10)
 
@@ -30,33 +43,29 @@ def create_analysis_section(parent):
         fg=FG_TEXT
     ).pack(anchor="w", padx=5, pady=5)
 
-    scrub_var = tk.DoubleVar(value=0.0)
-
-    #Scrubber Slider
-    scrubber = tk.Scale(
+    time_label = tk.Label(
         scrubber_frame,
-        from_=0,
-        to=100,
-        orient="horizontal",
-        variable=scrub_var,
-        length=300,
-        showvalue=True,
-        bg=ACCENT,
-        fg="white",
-        troughcolor="#444444",
+        text="00:00.000 / 00:00.000",
+        bg="#000000",
+        fg=FG_TEXT,
+        font=("Helvetica", 10, "bold")
     )
-    scrubber.pack(fill="x", padx=10, pady=20)
+    time_label.pack(pady=(10, 5))
 
-    #Scrubber scrub function
-    def on_scrub(value):
-        position = float(value)
-        print(f"Scrub Position: {position:.1f}%")
+    timeline = tk.Scale(
+        scrubber_frame,
+        from_=0.0,
+        to=1.0,            # wird später durch main_gui gesetzt
+        orient="horizontal",
+        resolution=0.001,  # Millisekunden
+        length=350,
+        showvalue=False
+    )
+    timeline.pack(fill="x", padx=10, pady=15)
 
-    scrubber.config(command=on_scrub)
 
-
-
-    #Analysis container right-------------------------------------
+    # Analysis container RIGHT---------------------------
     analysis_box(frame, "Frequenzspektrum", 2)
 
-    return frame
+    # WICHTIG: klare Rückgabe
+    return frame, timeline, time_label

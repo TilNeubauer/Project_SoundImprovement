@@ -6,7 +6,7 @@ from tkinter import filedialog
 from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT
 
 
-def create_input_frame(parent):
+def create_input_frame(parent, engine):
 
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=0, sticky="nsew", padx=10)
@@ -93,6 +93,10 @@ def create_input_frame(parent):
             text=f"Samplerate: {samplerate} Hz\nDauer: {minutes:02d}:{seconds:02d}"
         )
 
+        # Audio in Engine laden
+        engine.load_input(file_path)  
+
+
         print("Audio geladen:", file_path)
 
     # Import Button-----------------------------------------------
@@ -112,13 +116,15 @@ def create_input_frame(parent):
     # Play Button-------------------------------------------------
     tk.Button(
         input_controls_frame,
-        text="Play"
+        text="Play",
+        command=engine.play_input
     ).pack(side="left", padx=5)
 
     # Pause Button-----------------------------------------------
     tk.Button(
         input_controls_frame,
-        text="Pause"
+        text="Pause",
+        command=engine.pause_all
     ).pack(side="left", padx=5)
 
     # Right Spacer------------------------------------------------

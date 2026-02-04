@@ -3,7 +3,7 @@ from tkinter import ttk
 from .config import BG_FRAME, FG_TEXT, SECTION_FONT, ACCENT
 
 
-def create_pipeline_frame(parent):
+def create_pipeline_frame(parent, engine):
     # Grund-Frame-------------------------------------------------------
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=1, sticky="nsew", padx=10)
@@ -45,7 +45,7 @@ def create_pipeline_frame(parent):
         .pack(anchor="w")
 
     lp_cutoff = tk.Entry(lp_frame)
-    lp_cutoff.insert(0, "1000")
+    lp_cutoff.insert(0, "20")
     lp_cutoff.pack(fill="x")
 
     def toggle_lowpass():
@@ -81,7 +81,7 @@ def create_pipeline_frame(parent):
         .pack(anchor="w")
 
     hp_cutoff = tk.Entry(hp_frame)
-    hp_cutoff.insert(0, "500")
+    hp_cutoff.insert(0, "2000")
     hp_cutoff.pack(fill="x")
 
     def toggle_highpass():

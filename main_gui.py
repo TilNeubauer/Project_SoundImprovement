@@ -1,22 +1,65 @@
-from src_gui.main_window import create_main_window
-from src_gui.header import create_header
-from src_gui.main_content import create_main_content
-from src_gui.input_frame import create_input_frame
-from src_gui.pipeline_frame import create_pipeline_frame
-from src_gui.output_frame import create_output_frame
-from src_gui.analysis import create_analysis_section
+from src_gui.main_window import create_main_window          #Import main window setup
+from src_gui.header import create_header                    #Import header setup
+from src_gui.main_content import create_main_content        #Import main content setup
+from src_gui.input_frame import create_input_frame          #Import input frame setup
+from src_gui.pipeline_frame import create_pipeline_frame    #Import pipeline frame setup
+from src_gui.output_frame import create_output_frame        #Import output frame setup
+from src_gui.analysis import create_analysis_section        #Import analysis section setup
+from src.audio_engine import AudioEngine                    #Import audio engine
+
 
 def main():
     root = create_main_window()
 
+    engine = AudioEngine()
+
     create_header(root)
 
     main_content = create_main_content(root)
-    create_input_frame(main_content)
-    create_pipeline_frame(main_content)
-    create_output_frame(main_content)
+    create_input_frame(main_content, engine)
+    create_pipeline_frame(main_content, engine)
+    create_output_frame(main_content, engine)
 
-    create_analysis_section(root)
+    analysis_frame, timeline, time_label = create_analysis_section(root)
+    slider_internal_update = False
+
+    def on_timeline_change(value):
+        nonlocal slider_internal_update
+        if slider_internal_update:
+            return
+        engine.seek(float(value))
+
+    timeline.config(command=on_timeline_change)
+
+
+    def format_time(t):
+        minutes = int(t // 60)
+        seconds = int(t % 60)
+        millis = int((t - int(t)) * 1000)
+        return f"{minutes:02d}:{seconds:02d}.{millis:03d}"
+
+    def update_timeline():
+        nonlocal slider_internal_update
+
+        duration = engine.get_duration()
+        if duration > 0:
+            #Slider-Maximum setzen
+            if timeline.cget("to") != duration:
+                timeline.config(to=duration)
+
+            current = engine.get_active_time()
+
+            slider_internal_update = True
+            timeline.set(current)
+            slider_internal_update = False
+
+            time_label.config(
+                text=f"{format_time(current)} / {format_time(duration)}"
+            )
+
+        root.after(50, update_timeline)
+
+    update_timeline()
 
     root.mainloop()
 
