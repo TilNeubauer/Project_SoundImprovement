@@ -65,5 +65,14 @@ class AudioEngine:
         if self.input_player.data is not None:
             return self.input_player.duration
         return 0.0
+    
+    # Status abfragen
+    def get_state(self):
+        if self.input_player.playing:
+            return "input_playing"
+        if self.output_player.playing:
+            return "output_playing"
+        return "paused"
+
 
 

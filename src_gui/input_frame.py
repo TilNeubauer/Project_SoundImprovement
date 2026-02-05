@@ -42,7 +42,7 @@ def create_input_frame(parent, engine):
     input_controls_frame = tk.Frame(frame, bg=BG_FRAME)
     input_controls_frame.pack(fill="x", padx=10, pady=10)
 
-    # Import Button-----------------------------------------------
+    # Import Button logik-----------------------------------------------
     def on_button_click_insertdata():
         file_path = filedialog.askopenfilename(
             title="Select an audio file",
