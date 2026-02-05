@@ -114,17 +114,17 @@ def create_input_frame(parent, engine):
     tk.Frame(input_controls_frame, bg=BG_FRAME).pack(side="left", expand=True)
 
     # Play Button-------------------------------------------------
-    tk.Button(
-        input_controls_frame,
-        text="Play",
+    tk.Button( 
+        input_controls_frame, 
+        text="Play", 
         command=engine.play_input
     ).pack(side="left", padx=5)
 
     # Pause Button-----------------------------------------------
-    tk.Button(
-        input_controls_frame,
-        text="Pause",
-        command=engine.pause_all
+    tk.Button( 
+        input_controls_frame, 
+        text="Pause", 
+        command=engine.pause_all 
     ).pack(side="left", padx=5)
 
     # Right Spacer------------------------------------------------

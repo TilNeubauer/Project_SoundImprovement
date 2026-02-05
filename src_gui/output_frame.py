@@ -2,12 +2,13 @@ import tkinter as tk
 from tkinter import filedialog
 from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT
 
+
 def create_output_frame(parent, engine):
 
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=2, sticky="nsew", padx=10)
 
-    #Output Label------------------------------------------------
+    # Output Label------------------------------------------------
     tk.Label(
         frame,
         text="Output Signal",
@@ -16,7 +17,7 @@ def create_output_frame(parent, engine):
         fg=FG_TEXT
     ).pack(anchor="w", padx=10, pady=10)
 
-    #Processed Plots------------------------------
+    # Processed Plots---------------------------------------------
     tk.Label(
         frame,
         text="[ Processed Waveform Placeholder ]",
@@ -33,39 +34,41 @@ def create_output_frame(parent, engine):
         height=8
     ).pack(fill="x", padx=10)
 
-    #Control Buttons----------------------------------------
+    # Control Buttons---------------------------------------------
     controls = tk.Frame(frame, bg=BG_FRAME)
     controls.pack(fill="x", padx=10, pady=10)
 
-    #Left Spacer----------------------------------------
-    tk.Frame(controls, bg=BG_FRAME).pack(side="right", expand=True)
+    # Left Spacer-------------------------------------------------
+    tk.Frame(controls, bg=BG_FRAME).pack(side="left", expand=True)
 
-    #Play Button----------------------------------------
+    # Pause Button (links)----------------------------------------
+    pause_button = tk.Button(
+        controls,
+        text="Pause",
+        width=8,
+        command=engine.pause_all
+    )
+    pause_button.pack(side="left", padx=5)
+
+    # Play Button (rechts)----------------------------------------
     def play_output():
         if not engine.has_output():
             print("No processed audio available yet")
             return
         engine.play_output()
 
-    tk.Button(
+    play_button = tk.Button(
         controls,
         text="Play",
+        width=8,
         command=play_output
-    ).pack(side="right", padx=5)
+    )
+    play_button.pack(side="left", padx=5)
 
+    # Right Spacer------------------------------------------------
+    tk.Frame(controls, bg=BG_FRAME).pack(side="left", expand=True)
 
-    #Pause Button---------------------------------------
-    tk.Button(
-        controls,
-        text="Pause",
-        command=engine.pause_all
-    ).pack(side="right", padx=5)
-
-
-    #Right Spacer---------------------------------------
-    tk.Frame(controls, bg=BG_FRAME).pack(side="right", expand=True)
-
-    #Save Button----------------------------------------
+    # Save Button-------------------------------------------------
     def save_audio():
         if not engine.has_output():
             print("No processed audio available to save")
@@ -83,7 +86,6 @@ def create_output_frame(parent, engine):
         engine.save_output(file_path)
         print("Processed audio saved to:", file_path)
 
-
     tk.Button(
         controls,
         text="Save Audio",
@@ -92,17 +94,17 @@ def create_output_frame(parent, engine):
         padx=5,
         pady=5,
         command=save_audio
-    ).pack(side="right")
+    ).pack(side="left", padx=5)
 
-    #Metadata Labels----------------------------------------
+    # Metadata Labels---------------------------------------------
     tk.Label(
         frame,
         text="Samplerate: 44.1 kHz\nDauer: 00:00",
         font=TEXT_FONT,
         bg=BG_FRAME,
         fg=FG_TEXT,
-        justify="right"
-    ).pack(anchor="se", padx=10, pady=10)
+        justify="left"
+    ).pack(anchor="w", padx=10, pady=6)
 
     tk.Label(
         frame,
@@ -111,6 +113,6 @@ def create_output_frame(parent, engine):
         bg=BG_FRAME,
         fg=FG_TEXT,
         justify="left"
-    ).pack(anchor="w", padx=10, pady=10)
+    ).pack(anchor="w", padx=10, pady=(0, 10))
 
     return frame
