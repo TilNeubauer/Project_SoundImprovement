@@ -1,12 +1,19 @@
 import tkinter as tk
 from tkinter import filedialog
-from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT
+from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT, topframeheight
 
 
 def create_output_frame(parent, engine):
 
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=2, sticky="nsew", padx=10)
+
+    #Frame-Größe fixieren
+    frame.grid_propagate(False)
+    frame.pack_propagate(False)
+
+    #Frame-Höhe einstellen
+    frame.configure(height=topframeheight)
 
     # Output Label------------------------------------------------
     tk.Label(

@@ -8,3 +8,6 @@ ACCENT = "#3A7CA5"
 TITLE_FONT = ("Helvetica", 24, "bold")
 SECTION_FONT = ("Helvetica", 14, "bold")
 TEXT_FONT = ("Helvetica", 11)
+
+# Frame Höhe
+topframeheight = 470

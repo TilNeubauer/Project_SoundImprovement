@@ -3,13 +3,20 @@ import os                       # Dateiname und Größe
 import audioread                # Audio-Metadaten (MP3)
 import soundfile as sf          # Audio-Datei laden (WAV / MP3 / FLAC)
 from tkinter import filedialog
-from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT
+from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT, topframeheight
 
 
 def create_input_frame(parent, engine):
 
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=0, sticky="nsew", padx=10)
+
+    #Frame-Größe fixieren
+    frame.grid_propagate(False)
+    frame.pack_propagate(False)
+
+    #Frame-Höhe einstellen
+    frame.configure(height=topframeheight)
 
     # Input Label-------------------------------------------------
     tk.Label(

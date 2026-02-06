@@ -1,12 +1,19 @@
 import tkinter as tk
 from tkinter import ttk
-from .config import BG_FRAME, FG_TEXT, SECTION_FONT, ACCENT
+from .config import BG_FRAME, FG_TEXT, SECTION_FONT, ACCENT, topframeheight
 
 
 def create_pipeline_frame(parent, engine):
     # Grund-Frame-------------------------------------------------------
     frame = tk.Frame(parent, bg=BG_FRAME)
     frame.grid(row=0, column=1, sticky="nsew", padx=10)
+
+    #Frame-Größe fixieren
+    frame.grid_propagate(False)
+    frame.pack_propagate(False)
+
+    #Frame-Höhe einstellen
+    frame.configure(height=topframeheight)
 
     tk.Label(
         frame,
@@ -33,8 +40,13 @@ def create_pipeline_frame(parent, engine):
 
 
     # Container für dynamische Filter--------------------------------
-    filter_container = tk.Frame(frame, bg=BG_FRAME)
+    filter_container = tk.Frame(
+        frame,
+        bg=BG_FRAME,
+        height=450
+    )
     filter_container.pack(fill="x", padx=10, pady=10)
+    filter_container.pack_propagate(False)
 
     # LOWPASS--------------------------------------------------------
     lowpass_active = False
