@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT, topframeheight
+from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT, topframeheight, BTN_ACTIVE, BTN_INACTIVE, BTN_PAUSE
 
 
 def create_output_frame(parent, engine):
@@ -48,30 +48,52 @@ def create_output_frame(parent, engine):
     # Left Spacer-------------------------------------------------
     tk.Frame(controls, bg=BG_FRAME).pack(side="left", expand=True)
 
-    # Pause Button (links)----------------------------------------
-    pause_button = tk.Button(
-        controls,
-        text="Pause",
-        width=8,
-        command=engine.pause_all
-    )
-    pause_button.pack(side="left", padx=5)
+    # Button State
+    output_playing = False
 
-    # Play Button (rechts)----------------------------------------
-    def play_output():
+    def update_buttons():
+        play_btn.config(
+            bg=BTN_ACTIVE if output_playing else BTN_INACTIVE
+        )
+        pause_btn.config(
+            bg=BTN_PAUSE if not output_playing else BTN_INACTIVE
+        )
+
+    def on_play():
+        nonlocal output_playing
         if not engine.has_output():
             print("No processed audio available yet")
             return
         engine.play_output()
+        output_playing = True
+        update_buttons()
 
-    play_button = tk.Button(
+    def on_pause():
+        nonlocal output_playing
+        engine.pause_all()
+        output_playing = False
+        update_buttons()
+
+    pause_btn = tk.Button(
+        controls,
+        text="Pause",
+        width=8,
+        bg=BTN_PAUSE,
+        fg="white",
+        command=on_pause
+    )
+    pause_btn.pack(side="left", padx=5)
+
+    play_btn = tk.Button(
         controls,
         text="Play",
         width=8,
-        command=play_output
+        bg=BTN_INACTIVE,
+        fg="white",
+        command=on_play
     )
-    play_button.pack(side="left", padx=5)
-
+    play_btn.pack(side="left", padx=5)
+    
     # Right Spacer------------------------------------------------
     tk.Frame(controls, bg=BG_FRAME).pack(side="left", expand=True)
 

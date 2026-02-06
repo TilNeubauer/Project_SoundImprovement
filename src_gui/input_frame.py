@@ -3,7 +3,17 @@ import os                       # Dateiname und Größe
 import audioread                # Audio-Metadaten (MP3)
 import soundfile as sf          # Audio-Datei laden (WAV / MP3 / FLAC)
 from tkinter import filedialog
-from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT, topframeheight
+from .config import (
+    BG_FRAME, 
+    BTN_ACTIVE, 
+    FG_TEXT, 
+    SECTION_FONT, 
+    TEXT_FONT, 
+    ACCENT, 
+    topframeheight, 
+    BTN_INACTIVE, 
+    BTN_PAUSE
+)
 
 
 def create_input_frame(parent, engine):
@@ -120,19 +130,48 @@ def create_input_frame(parent, engine):
     # Left Spacer-------------------------------------------------
     tk.Frame(input_controls_frame, bg=BG_FRAME).pack(side="left", expand=True)
 
-    # Play Button-------------------------------------------------
-    tk.Button( 
-        input_controls_frame, 
-        text="Play", 
-        command=engine.play_input
-    ).pack(side="left", padx=5)
+    # Button State------------------------------------------------
+    input_playing = False
 
-    # Pause Button-----------------------------------------------
-    tk.Button( 
-        input_controls_frame, 
-        text="Pause", 
-        command=engine.pause_all 
-    ).pack(side="left", padx=5)
+    def update_buttons():
+        play_btn.config(
+            bg=BTN_ACTIVE if input_playing else BTN_INACTIVE
+        )
+        pause_btn.config(
+            bg=BTN_PAUSE if not input_playing else BTN_INACTIVE
+        )
+
+    def on_play():
+        nonlocal input_playing
+        engine.play_input()
+        input_playing = True
+        update_buttons()
+
+    def on_pause():
+        nonlocal input_playing
+        engine.pause_all()
+        input_playing = False
+        update_buttons()
+
+    play_btn = tk.Button(
+        input_controls_frame,
+        text="Play",
+        width=8,
+        bg=BTN_INACTIVE,
+        fg="white",
+        command=on_play
+    )
+    play_btn.pack(side="left", padx=5)
+
+    pause_btn = tk.Button(
+        input_controls_frame,
+        text="Pause",
+        width=8,
+        bg=BTN_PAUSE,
+        fg="white",
+        command=on_pause
+    )
+    pause_btn.pack(side="left", padx=5)
 
     # Right Spacer------------------------------------------------
     tk.Frame(input_controls_frame, bg=BG_FRAME).pack(side="left", expand=True)

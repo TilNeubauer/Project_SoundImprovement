@@ -13,16 +13,23 @@ def main():
 
     engine = AudioEngine()
 
+    # Zentrale Stelle für UI-Reset
+    #...
+
+    # Header erstellen
     create_header(root)
 
+    # Hauptinhalt erstellen
     main_content = create_main_content(root)
     create_input_frame(main_content, engine)
     create_pipeline_frame(main_content, engine)
     create_output_frame(main_content, engine)
 
+    # Analysebereich erstellen
     analysis_frame, timeline, time_label = create_analysis_section(root)
     slider_internal_update = False
 
+    # Timeline-Callback
     def on_timeline_change(value):
         nonlocal slider_internal_update
         if slider_internal_update:
@@ -31,7 +38,7 @@ def main():
 
     timeline.config(command=on_timeline_change)
 
-
+    # Timeline-Update-Funktion
     def format_time(t):
         minutes = int(t // 60)
         seconds = int(t % 60)
