@@ -8,9 +8,25 @@ class AudioEngine:
         self.output_player = AudioPlayer()
         self.current_time = 0.0
 
+        self.input_signal = None
+        self.samperate = None
+
     #Input laden
     def load_input(self, filepath):
-        self.input_player.load(filepath)
+        self.input_player.load(filepath)                #Player lädt die Audiodatei
+
+        self.input_signal = self.input_player.data      #Rohdaten des Input-Signals speichern
+        self.samplerate = self.input_player.samplerate  #Samplerate des Input-Signals speichern
+
+        self.output_player.data = None                  #Output zurücksetzen
+
+        #Debug-Ausgabe
+#        print("=== AudioEngine.load_input ===")
+#        print("Path:", filepath)
+#        print("Signal shape:", self.input_signal.shape)
+#        print("Samplerate:", self.samplerate)
+#        print("--------------------------------")
+
 
     #Output laden
     def load_output(self, filepath):

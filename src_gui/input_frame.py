@@ -65,6 +65,7 @@ def create_input_frame(parent, engine):
             title="Select an audio file",
             filetypes=[("Audio-Dateien", "*.wav *.mp3 *.flac")]
         )
+        engine.load_input(file_path)  # Audio in Engine laden
 
         if not file_path:
             return  # Abbrechen, wenn keine Datei ausgewählt wurde
