@@ -8,8 +8,12 @@ class AudioEngine:
         self.output_player = AudioPlayer()
         self.current_time = 0.0
 
+        #Signal input
         self.input_signal = None
         self.samperate = None
+
+        #Signal output
+        self.output_signal = None
 
     #Input laden
     def load_input(self, filepath):
@@ -27,6 +31,9 @@ class AudioEngine:
 #        print("Samplerate:", self.samplerate)
 #        print("--------------------------------")
 
+        #Bilden des Output-Signals
+        self.build_output_passthrough()                 #Output-Signal auf Input-Signal setzen (Passthrough)
+        
 
     #Output laden
     def load_output(self, filepath):
@@ -89,6 +96,24 @@ class AudioEngine:
         if self.output_player.playing:
             return "output_playing"
         return "paused"
+    
+    #Audio durchgabe bei keinem aktiven Filter
+    def build_output_passthrough(self):
+        if self.input_signal is None:
+            print("No input signal – cannot build output")
+            return
+
+        # 1) Signal kopieren (wichtig!)
+        self.output_signal = self.input_signal.copy()
+
+        # 2) Output-Player laden
+        self.output_player.data = self.output_signal
+        self.output_player.samplerate = self.samplerate
+        self.output_player.position = 0
+        self.output_player.duration = len(self.output_signal) / self.samplerate
+
+        print("Output passthrough built")
+
 
 
 
