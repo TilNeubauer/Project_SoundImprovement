@@ -15,6 +15,15 @@ class AudioEngine:
         #Signal output
         self.output_signal = None
 
+        #Bandpass Status
+        self.bandpass_active = False
+        self.bandpass_low = None
+        self.bandpass_high = None
+
+        #Spectral Gate Status
+
+        #Equalizer Status
+
     #Input laden
     def load_input(self, filepath):
         self.input_player.load(filepath)                #Player lädt die Audiodatei
@@ -113,6 +122,51 @@ class AudioEngine:
         self.output_player.duration = len(self.output_signal) / self.samplerate
 
         print("Output passthrough built")
+
+    #Audio Prozessing anwenden (hier werden die Filter angewendet)
+    def apply_processing(self):
+        if self.input_signal is None:
+            print("No input signal – cannot apply processing")
+            return
+        
+        sig = self.input_signal.copy()
+
+        #Bandpass-Filter anwenden
+        if self.bandpass_active:
+            from .bandpass import butter_bandpass_filter
+
+            sig = butter_bandpass_filter(
+                sig,
+                self.bandpass_low,
+                self.bandpass_high,
+                self.samplerate
+            )
+        
+        #Output-Signal aktualisieren
+        self.output_signal = sig
+
+        self.output_player.data = sig
+        self.output_player.samplerate = self.samplerate
+        self.output_player.position = 0
+        self.output_player.duration = len(sig) / self.samplerate
+         
+
+    #Bandpass von außen steuerbar machen
+    def set_bandpass(self, active: bool, low: float = None, high: float = None):
+        self.bandpass_active = active
+
+        if low is not None:
+            self.bandpass_low = low
+        if high is not None:
+            self.bandpass_high = high
+
+        print(
+            f"Bandpass:",
+            "ON" if active else "OFF",
+            f"({self.bandpass_low} - {self.bandpass_high} Hz)"
+        )
+
+        self.apply_processing()
 
 
 

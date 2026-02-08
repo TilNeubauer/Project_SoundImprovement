@@ -121,9 +121,17 @@ def create_pipeline_frame(parent, engine):
 
 
     # BANDPASS--------------------------------------------------
-    bandpass_active = False
 
     bp_frame = tk.Frame(filter_container, bg=BG_FRAME)
+
+    #Key Event für Bandpass-Parameteränderung (nur wenn Filter aktiv ist)
+    def on_bandpass_change(event):
+        if bp_button.cget("text") == "Applied":
+            engine.set_bandpass(
+                active=True,
+                low=float(bp_low.get()),
+                high=float(bp_high.get())
+            )
 
     tk.Label(bp_frame, text="Bandpass Low Frequenzy [Hz]", bg=BG_FRAME, fg=FG_TEXT)\
         .pack(anchor="w")
@@ -131,25 +139,34 @@ def create_pipeline_frame(parent, engine):
     bp_low.insert(0, "300")
     bp_low.pack(fill="x")
 
+    #Aktualisieren des Bandpass-Filters bei Änderung der Eingabefelder (nur wenn Filter aktiv ist)
+    bp_low.bind("<KeyRelease>", on_bandpass_change)
+
     tk.Label(bp_frame, text="Bandpass High Frequenzy [Hz]", bg=BG_FRAME, fg=FG_TEXT)\
         .pack(anchor="w")
     bp_high = tk.Entry(bp_frame)
     bp_high.insert(0, "3000")
     bp_high.pack(fill="x")
 
-    def toggle_bandpass():
-        nonlocal bandpass_active
-        bandpass_active = not bandpass_active
+    #Aktualisieren des Bandpass-Filters bei Änderung der Eingabefelder (nur wenn Filter aktiv ist)
+    bp_high.bind("<KeyRelease>", on_bandpass_change)
 
-        bp_button.config(
-            text="Applied" if bandpass_active else "Apply",
-            bg="#2E8B57" if bandpass_active else ACCENT
+    def toggle_bandpass():
+        activee = bp_button.cget("text") == "Apply"
+
+        low = float(bp_low.get())
+        high = float(bp_high.get())
+
+        engine.set_bandpass(
+            active=activee,
+            low=low,
+            high=high
         )
 
-        if bandpass_active:
-            print("Bandpass activated:", bp_low.get(), "-", bp_high.get())
-        else:
-            print("Bandpass deactivated")
+        bp_button.config(
+            text="Applied" if activee else "Apply",
+            bg="#2E8B57" if activee else ACCENT
+        )
 
     bp_button = tk.Button(
         bp_frame,
@@ -159,6 +176,7 @@ def create_pipeline_frame(parent, engine):
         command=toggle_bandpass
     )
     bp_button.pack(pady=5)
+
 
 
     # SINSIG Filter------------------------------------------------
