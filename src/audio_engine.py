@@ -1,4 +1,6 @@
 from .audio_player import AudioPlayer
+from .bandpass import butter_bandpass_filter
+from .spectral_gate import noise_profile, spectral_gate
 
 
 class AudioEngine:
@@ -21,8 +23,11 @@ class AudioEngine:
         self.bandpass_high = None
 
         #Spectral Gate Status
+        self.spectralgate_active = False
+        self.noise_profile = None
 
         #Equalizer Status
+
 
     #Input laden
     def load_input(self, filepath):
@@ -123,32 +128,7 @@ class AudioEngine:
 
         print("Output passthrough built")
 
-    #Audio Prozessing anwenden (hier werden die Filter angewendet)
-    def apply_processing(self):
-        if self.input_signal is None:
-            print("No input signal – cannot apply processing")
-            return
-        
-        sig = self.input_signal.copy()
-
-        #Bandpass-Filter anwenden
-        if self.bandpass_active:
-            from .bandpass import butter_bandpass_filter
-
-            sig = butter_bandpass_filter(
-                sig,
-                self.bandpass_low,
-                self.bandpass_high,
-                self.samplerate
-            )
-        
-        #Output-Signal aktualisieren
-        self.output_signal = sig
-
-        self.output_player.data = sig
-        self.output_player.samplerate = self.samplerate
-        self.output_player.position = 0
-        self.output_player.duration = len(sig) / self.samplerate
+   
          
 
     #Bandpass von außen steuerbar machen
@@ -168,6 +148,70 @@ class AudioEngine:
 
         self.apply_processing()
 
+
+    #Spectral Gate von außen steuerbar machen
+    def set_spectral_gate(self, active: bool):
+        self.spectral_gate_active = active
+
+        if active and self.noise_profile is None:
+            print("No noise profile available yet")
+
+        self.apply_processing()
+
+
+    #Equalizer von außen steuerbar machen
+    #.....
+
+
+
+     #Audio Prozessing anwenden (hier werden die Filter angewendet)
+    def apply_processing(self):
+        if self.input_signal is None:
+            print("No input signal – cannot apply processing")
+            return
+        
+        sig = self.input_signal.copy()
+
+        #Bandpass-Filter anwenden
+        if self.bandpass_active:
+            from .bandpass import butter_bandpass_filter
+
+            sig = butter_bandpass_filter(
+                sig,
+                self.bandpass_low,
+                self.bandpass_high,
+                self.samplerate
+            )
+        #Spectral Gate anwenden
+        if self.spectral_gate_active:
+
+            #Sicherheitscheck
+            if sig is None or len(sig) < 4096:
+                print("Signal too short for spectral gate")
+                self.output_signal = sig
+                return
+
+            # Noise-Profil einmalig berechnen
+            if self.noise_profile is None:
+                _, self.noise_profile = noise_profile(
+                    sig,
+                    self.samplerate
+                )
+
+            sig = spectral_gate(
+                sig,
+                self.samplerate,
+                self.noise_profile
+    )
+
+        
+        #Output-Signal aktualisieren
+        self.output_signal = sig
+
+        self.output_player.data = sig
+        self.output_player.samplerate = self.samplerate
+        self.output_player.position = 0
+        self.output_player.duration = len(sig) / self.samplerate
 
 
 

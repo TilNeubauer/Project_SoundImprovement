@@ -32,7 +32,7 @@ def create_pipeline_frame(parent, engine):
 
     filter_cb = ttk.Combobox(
         frame,
-        values=["Low Pass", "High Pass", "Band Pass", "SinSig", "Equalizer"],
+        values=["Low Pass", "High Pass", "Band Pass", "Spectral Gate", "Equalizer"],
         textvariable=filter_var,
         state="readonly"
     )
@@ -140,7 +140,8 @@ def create_pipeline_frame(parent, engine):
     bp_low.pack(fill="x")
 
     #Aktualisieren des Bandpass-Filters bei Änderung der Eingabefelder (nur wenn Filter aktiv ist)
-    bp_low.bind("<KeyRelease>", on_bandpass_change)
+    #bp_low.bind("<KeyRelease>", on_bandpass_change)    #Runtimeoptimierung
+    bp_low.bind("<Return>", on_bandpass_change)
 
     tk.Label(bp_frame, text="Bandpass High Frequenzy [Hz]", bg=BG_FRAME, fg=FG_TEXT)\
         .pack(anchor="w")
@@ -149,7 +150,8 @@ def create_pipeline_frame(parent, engine):
     bp_high.pack(fill="x")
 
     #Aktualisieren des Bandpass-Filters bei Änderung der Eingabefelder (nur wenn Filter aktiv ist)
-    bp_high.bind("<KeyRelease>", on_bandpass_change)
+    #bp_high.bind("<KeyRelease>", on_bandpass_change)
+    bp_high.bind("<Return>", on_bandpass_change)
 
     def toggle_bandpass():
         activee = bp_button.cget("text") == "Apply"
@@ -179,29 +181,30 @@ def create_pipeline_frame(parent, engine):
 
 
 
-    # SINSIG Filter------------------------------------------------
-    sinsig_active = False
+    # Spectral Gate------------------------------------------------
 
-    sin_frame = tk.Frame(filter_container, bg=BG_FRAME)
+    spectralgate_frame = tk.Frame(filter_container, bg=BG_FRAME)
 
-    def toggle_sinsig():
-        nonlocal sinsig_active
-        sinsig_active = not sinsig_active
+    def toggle_spectral_gate():
+        active = sg_button.cget("text") == "Apply"
 
-        sin_button.config(
-            text="Applied" if sinsig_active else "Apply",
-            bg="#2E8B57" if sinsig_active else ACCENT
+        engine.set_spectral_gate(active=active)
+
+
+        sg_button.config(
+            text="Applied" if active else "Apply",
+            bg="#2E8B57" if active else ACCENT
         )
 
-        print("SinSig activated" if sinsig_active else "SinSig deactivated")
-    sin_button = tk.Button(
-        sin_frame,
+        print("Spectral Gate activated" if active else "Spectral Gate deactivated")
+    sg_button = tk.Button(
+        spectralgate_frame,
         text="Apply",
         bg=ACCENT,
         fg="white",
-        command=toggle_sinsig
+        command=toggle_spectral_gate
     )
-    sin_button.pack(pady=5)
+    sg_button.pack(pady=5)
 
 
     # EQUALIZER-------------------------------------------------
@@ -343,8 +346,8 @@ def create_pipeline_frame(parent, engine):
             hp_frame.pack(fill="x")
         elif selection == "Band Pass":
             bp_frame.pack(fill="x")
-        elif selection == "SinSig":
-            sin_frame.pack(fill="x")
+        elif selection == "Spectral Gate":
+            spectralgate_frame.pack(fill="x")
         elif selection == "Equalizer":
             eq_frame.pack(fill="x")
 
