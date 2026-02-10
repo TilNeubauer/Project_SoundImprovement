@@ -3,6 +3,7 @@ import os                       # Dateiname und Größe
 import audioread                # Audio-Metadaten (MP3)
 import soundfile as sf          # Audio-Datei laden (WAV / MP3 / FLAC)
 from tkinter import filedialog
+from src.plot import plot_waveform, plot_spectrum
 from .config import (
     BG_FRAME, 
     BTN_ACTIVE, 
@@ -38,26 +39,22 @@ def create_input_frame(parent, engine):
     ).pack(anchor="w", padx=10, pady=10)
 
     # Waveform Diagram--------------------------------------------
-    tk.Label(
-        frame,
-        text="[ Waveform Placeholder ]",
-        bg="#000000",
-        fg=FG_TEXT,
-        height=8
-    ).pack(fill="x", padx=10, pady=(0, 8))
+    waveform_container = tk.Frame(frame, bg="#000000", height=150)
+    waveform_container.pack(fill="x", padx=10, pady=(0, 8))
+    waveform_container.pack_propagate(False)
 
     # Frequency Spectrum Diagram----------------------------------
-    tk.Label(
-        frame,
-        text="[ Frequency Spectrum Placeholder ]",
-        bg="#000000",
-        fg=FG_TEXT,
-        height=8
-    ).pack(fill="x", padx=10)
+    spectrum_container = tk.Frame(frame, bg="#000000", height=150)
+    spectrum_container.pack(fill="x", padx=10)
+    spectrum_container.pack_propagate(False)
 
     # Frame Control and import Buttons----------------------------
     input_controls_frame = tk.Frame(frame, bg=BG_FRAME)
     input_controls_frame.pack(fill="x", padx=10, pady=10)
+
+    #Alte Plots entfernen
+    waveform_canvas = None
+    spectrum_canvas = None
 
     # Import Button logik-----------------------------------------------
     def on_button_click_insertdata():
@@ -66,6 +63,29 @@ def create_input_frame(parent, engine):
             filetypes=[("Audio-Dateien", "*.wav *.mp3 *.flac")]
         )
         engine.load_input(file_path)  # Audio in Engine laden
+
+        #Plots aktualisieren
+        nonlocal waveform_canvas, spectrum_canvas
+
+        # Alte Plots entfernen
+        if waveform_canvas:
+            waveform_canvas.get_tk_widget().destroy()
+        if spectrum_canvas:
+            spectrum_canvas.get_tk_widget().destroy()
+
+        # Neue Plots zeichnen
+        waveform_canvas = plot_waveform(
+            waveform_container,
+            engine.input_signal,
+            engine.samplerate
+        )
+
+        spectrum_canvas = plot_spectrum(
+            spectrum_container,
+            engine.input_signal,
+            engine.samplerate
+        )
+
 
         if not file_path:
             return  # Abbrechen, wenn keine Datei ausgewählt wurde

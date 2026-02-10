@@ -1,6 +1,7 @@
 from numpy.typing import NDArray
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import librosa
 import librosa.display
 from scipy.signal import stft
@@ -326,3 +327,63 @@ def plot_only_spec(sig, sr):
     plot_spectogram(sig, sr, ax=ax, title="Signal (time)")
     fig.tight_layout()
     plt.show()
+
+
+
+
+#Waveform-Plot
+def plot_waveform(parent, signal, samplerate):
+    """
+    Erstellt einen Waveform-Plot in einem Tkinter-Frame
+    """
+    fig, ax = plt.subplots(figsize=(5, 2), dpi=100)
+    fig.patch.set_facecolor("#000000")
+    ax.set_facecolor("#000000")
+
+    if signal.ndim > 1:
+        signal = signal[:, 0]  # nur linker Kanal
+
+    t = np.arange(len(signal)) / samplerate
+    ax.plot(t, signal, color="white", linewidth=0.6)
+
+    ax.set_xlabel("Time [s]", color="white")
+    ax.set_ylabel("Amplitude", color="white")
+    ax.tick_params(colors="white")
+    ax.spines[:].set_color("white")
+
+    canvas = FigureCanvasTkAgg(fig, master=parent)
+    canvas.draw()
+    canvas.get_tk_widget().pack(fill="x", expand=True)
+
+    return canvas
+
+#Specrum Plot
+def plot_spectrum(parent, signal, samplerate):
+    """
+    Erstellt ein Frequenzspektrum (FFT) in einem Tkinter-Frame
+    """
+    fig, ax = plt.subplots(figsize=(5, 2), dpi=100)
+    fig.patch.set_facecolor("#000000")
+    ax.set_facecolor("#000000")
+
+    if signal.ndim > 1:
+        signal = signal[:, 0]
+
+    N = len(signal)
+    fft = np.abs(np.fft.rfft(signal))
+    freqs = np.fft.rfftfreq(N, 1 / samplerate)
+
+    ax.plot(freqs, fft, color="white", linewidth=0.6)
+    ax.set_xlim(0, samplerate / 2)
+
+    ax.set_xlabel("Frequency [Hz]", color="white")
+    ax.set_ylabel("Magnitude", color="white")
+    ax.tick_params(colors="white")
+    ax.spines[:].set_color("white")
+
+    canvas = FigureCanvasTkAgg(fig, master=parent)
+    canvas.draw()
+    canvas.get_tk_widget().pack(fill="x", expand=True)
+
+    return canvas
+
