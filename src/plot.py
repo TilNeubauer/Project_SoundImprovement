@@ -351,6 +351,14 @@ def plot_waveform(parent, signal, samplerate):
     ax.tick_params(colors="white")
     ax.spines[:].set_color("white")
 
+    #Plotgröße
+    fig.subplots_adjust(
+        left=0.2,
+        right=0.93,
+        top=0.91,
+        bottom=0.3
+    )
+
     canvas = FigureCanvasTkAgg(fig, master=parent)
     canvas.draw()
     canvas.get_tk_widget().pack(fill="x", expand=True)
@@ -380,6 +388,14 @@ def plot_spectrum(parent, signal, samplerate):
     ax.set_ylabel("Magnitude", color="white")
     ax.tick_params(colors="white")
     ax.spines[:].set_color("white")
+
+    #Plotgröße
+    fig.subplots_adjust(
+        left=0.2,
+        right=0.93,
+        top=0.91,
+        bottom=0.3
+    )
 
     canvas = FigureCanvasTkAgg(fig, master=parent)
     canvas.draw()

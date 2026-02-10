@@ -6,7 +6,7 @@ from .config import BG_FRAME, FG_TEXT, SECTION_FONT, ACCENT, topframeheight
 def create_pipeline_frame(parent, engine):
     # Grund-Frame-------------------------------------------------------
     frame = tk.Frame(parent, bg=BG_FRAME)
-    frame.grid(row=0, column=1, sticky="nsew", padx=10)
+    frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=(0, 8))
 
     #Frame-Größe fixieren
     frame.grid_propagate(False)

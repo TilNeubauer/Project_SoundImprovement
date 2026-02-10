@@ -4,37 +4,19 @@ from .config import BG_FRAME, FG_TEXT
 
 def create_analysis_section(parent):
     frame = tk.Frame(parent, bg=BG_FRAME)
-    frame.grid(row=2, column=0, sticky="nsew", padx=20, pady=10)
-
-    frame.columnconfigure((0, 1, 2), weight=1)
-
-    def analysis_box(parent, title, col):
-        box = tk.Frame(parent, bg="#000000")
-        box.grid(row=0, column=col, sticky="nsew", padx=10)
-
-        tk.Label(
-            box,
-            text=title,
-            bg="#000000",
-            fg=FG_TEXT
-        ).pack(anchor="w", padx=5)
-
-        tk.Label(
-            box,
-            text="[ Plot Placeholder ]",
-            bg="#000000",
-            fg=FG_TEXT,
-            height=6
-        ).pack()
-
-  
-    # Analysis container LEFT----------------------------
-    analysis_box(frame, "Frequenzspektrum", 0)
+    frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=(0,10))
+    frame.columnconfigure(0, weight=1)
+    frame.rowconfigure(0, weight=1)
+    frame.grid_propagate(False)
+    frame.configure(height=130)
+    
 
 
     # Scrubber / Timeline container (MITTELTEIL)-----------------------
     scrubber_frame = tk.Frame(frame, bg="#000000")
-    scrubber_frame.grid(row=0, column=1, sticky="nsew", padx=10)
+    scrubber_frame.grid_propagate(False)    
+    scrubber_frame.grid(row=0, column=0, sticky="nsew", padx=10)
+
 
     tk.Label(
         scrubber_frame,
@@ -61,11 +43,8 @@ def create_analysis_section(parent):
         length=350,
         showvalue=False
     )
-    timeline.pack(fill="x", padx=10, pady=15)
+    timeline.pack(fill="x", expand=True, padx=10, pady=10)
 
-
-    # Analysis container RIGHT---------------------------
-    analysis_box(frame, "Frequenzspektrum", 2)
 
     # WICHTIG: klare Rückgabe
     return frame, timeline, time_label

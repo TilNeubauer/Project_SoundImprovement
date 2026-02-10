@@ -6,6 +6,8 @@ from src_gui.pipeline_frame import create_pipeline_frame    #Import pipeline fra
 from src_gui.output_frame import create_output_frame        #Import output frame setup
 from src_gui.analysis import create_analysis_section        #Import analysis section setup
 from src.audio_engine import AudioEngine                    #Import audio engine
+import tkinter as tk
+from src_gui.config import BG_MAIN
 
 
 def main():
@@ -21,12 +23,22 @@ def main():
 
     # Hauptinhalt erstellen
     main_content = create_main_content(root)
+
+    # Middle-Container für Pipeline + Analyse
+    middle_container = tk.Frame(main_content, bg=BG_MAIN)
+    middle_container.grid(row=0, column=1, sticky="nsew")
+
+    # Layout im Middle-Container
+    middle_container.rowconfigure(0, weight=3)      # Pipeline (groß)
+    middle_container.rowconfigure(1, weight=2)      # Analyse (klein)
+    middle_container.columnconfigure(0, weight=1)   # 
+
     create_input_frame(main_content, engine)
-    create_pipeline_frame(main_content, engine)
+    create_pipeline_frame(middle_container, engine)
     create_output_frame(main_content, engine)
 
     # Analysebereich erstellen
-    analysis_frame, timeline, time_label = create_analysis_section(root)
+    analysis_frame, timeline, time_label = create_analysis_section(middle_container)
     slider_internal_update = False
 
     # Timeline-Callback
