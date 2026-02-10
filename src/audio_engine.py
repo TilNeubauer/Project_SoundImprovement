@@ -3,6 +3,7 @@ from .bandpass import butter_bandpass_filter
 from .spectral_gate import noise_profile, spectral_gate
 from .bandpass import butter_bandpass_filter
 from .equalizer import apply_eq
+import numpy as np
 
 
 class AudioEngine:
@@ -194,27 +195,36 @@ class AudioEngine:
                 self.bandpass_high,
                 self.samplerate
             )
-        #Spectral Gate anwenden
-        if self.spectral_gate_active:
+        # Sicherstellen: (N, C)
+        if sig.ndim == 1:
+            sig = sig[:, None]
 
-            #Sicherheitscheck
-            if sig is None or len(sig) < 4096:
-                print("Signal too short for spectral gate")
-                self.output_signal = sig
-                return
+        out = np.zeros_like(sig)
 
-            # Noise-Profil einmalig berechnen
+        for ch in range(sig.shape[1]):
+            channel = sig[:, ch]
+
+            # Noise-Profil nur einmal pro Kanal erzeugen
             if self.noise_profile is None:
                 _, self.noise_profile = noise_profile(
-                    sig,
+                    channel,
                     self.samplerate
                 )
 
-            sig = spectral_gate(
-                sig,
+            out[:, ch] = spectral_gate(
+                channel,
                 self.samplerate,
                 self.noise_profile
-                )
+            )
+
+        sig = out
+
+        print(
+        "Spectral Gate:",
+        "ON" if self.spectral_gate_active else "OFF",
+        "| Noise profile bins:",
+        None if self.noise_profile is None else len(self.noise_profile)
+)
 
         #Equalizer anwenden
         if self.eq_active and self.eq_xs is not None and self.eq_ys is not None:
