@@ -4,7 +4,7 @@ from .config import BG_FRAME, FG_TEXT
 
 def create_analysis_section(parent):
     frame = tk.Frame(parent, bg=BG_FRAME)
-    frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=(0,10))
+    frame.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0,8))
     frame.columnconfigure(0, weight=1)
     frame.rowconfigure(0, weight=1)
     frame.grid_propagate(False)
@@ -39,7 +39,7 @@ def create_analysis_section(parent):
         from_=0.0,
         to=1.0,            # wird später durch main_gui gesetzt
         orient="horizontal",
-        resolution=0.001,  # Millisekunden
+        resolution=0.01,  # Millisekunden
         length=350,
         showvalue=False
     )
