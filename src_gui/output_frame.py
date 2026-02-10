@@ -74,16 +74,6 @@ def create_output_frame(parent, engine):
         output_playing = False
         update_buttons()
 
-    pause_btn = tk.Button(
-        controls,
-        text="Pause",
-        width=8,
-        bg=BTN_PAUSE,
-        fg="white",
-        command=on_pause
-    )
-    pause_btn.pack(side="left", padx=5)
-
     play_btn = tk.Button(
         controls,
         text="Play",
@@ -93,6 +83,16 @@ def create_output_frame(parent, engine):
         command=on_play
     )
     play_btn.pack(side="left", padx=5)
+
+    pause_btn = tk.Button(
+        controls,
+        text="Pause",
+        width=8,
+        bg=BTN_PAUSE,
+        fg="white",
+        command=on_pause
+    )
+    pause_btn.pack(side="left", padx=5)
     
     # Right Spacer------------------------------------------------
     tk.Frame(controls, bg=BG_FRAME).pack(side="left", expand=True)
@@ -126,22 +126,22 @@ def create_output_frame(parent, engine):
     ).pack(side="left", padx=5)
 
     # Metadata Labels---------------------------------------------
-    tk.Label(
-        frame,
-        text="Samplerate: 44.1 kHz\nDauer: 00:00",
-        font=TEXT_FONT,
-        bg=BG_FRAME,
-        fg=FG_TEXT,
-        justify="left"
-    ).pack(anchor="w", padx=10, pady=6)
+    # tk.Label(
+    #     frame,
+    #     text="Samplerate: 44.1 kHz\nDauer: 00:00",
+    #     font=TEXT_FONT,
+    #     bg=BG_FRAME,
+    #     fg=FG_TEXT,
+    #     justify="left"
+    # ).pack(anchor="w", padx=10, pady=6)
 
-    tk.Label(
-        frame,
-        text="[Filename dummy] [Datatype dummy] [filesize dummy]",
-        font=TEXT_FONT,
-        bg=BG_FRAME,
-        fg=FG_TEXT,
-        justify="left"
-    ).pack(anchor="w", padx=10, pady=(0, 10))
+    # tk.Label(
+    #     frame,
+    #     text="[Filename dummy] [Datatype dummy] [filesize dummy]",
+    #     font=TEXT_FONT,
+    #     bg=BG_FRAME,
+    #     fg=FG_TEXT,
+    #     justify="left"
+    # ).pack(anchor="w", padx=10, pady=(0, 10))
 
     return frame
