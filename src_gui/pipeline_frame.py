@@ -25,14 +25,14 @@ def create_pipeline_frame(parent, engine):
 
 
     # Filter-Auswahl Dropdown----------------------------------------
-    filter_var = tk.StringVar(value="Low Pass")
+    filter_var = tk.StringVar(value="Band Pass")
 
     tk.Label(frame, text="Filter", bg=BG_FRAME, fg=FG_TEXT)\
         .pack(anchor="w", padx=10)
 
     filter_cb = ttk.Combobox(
         frame,
-        values=["Low Pass", "High Pass", "Band Pass", "Spectral Gate", "Equalizer"],
+        values=["Band Pass", "Spectral Gate", "Equalizer"],
         textvariable=filter_var,
         state="readonly"
     )
@@ -47,77 +47,6 @@ def create_pipeline_frame(parent, engine):
     )
     filter_container.pack(fill="x", padx=10, pady=10)
     filter_container.pack_propagate(False)
-
-    # LOWPASS--------------------------------------------------------
-    lowpass_active = False
-
-    lp_frame = tk.Frame(filter_container, bg=BG_FRAME)
-
-    tk.Label(lp_frame, text="Lowpass Cutoff [Hz]", bg=BG_FRAME, fg=FG_TEXT)\
-        .pack(anchor="w")
-
-    lp_cutoff = tk.Entry(lp_frame)
-    lp_cutoff.insert(0, "20")
-    lp_cutoff.pack(fill="x")
-
-    def toggle_lowpass():
-        nonlocal lowpass_active
-        lowpass_active = not lowpass_active
-
-        lp_button.config(
-            text="Applied" if lowpass_active else "Apply",
-            bg="#2E8B57" if lowpass_active else ACCENT
-        )
-
-        if lowpass_active:
-            print("Lowpass activated:", lp_cutoff.get())
-        else:
-            print("Lowpass deactivated")
-
-    lp_button = tk.Button(
-        lp_frame,
-        text="Apply",
-        bg=ACCENT,
-        fg="white",
-        command=toggle_lowpass
-    )
-    lp_button.pack(pady=5)
-
-
-    # HIGHPASS--------------------------------------------------------
-    highpass_active = False
-
-    hp_frame = tk.Frame(filter_container, bg=BG_FRAME)
-
-    tk.Label(hp_frame, text="Highpass Cutoff [Hz]", bg=BG_FRAME, fg=FG_TEXT)\
-        .pack(anchor="w")
-
-    hp_cutoff = tk.Entry(hp_frame)
-    hp_cutoff.insert(0, "2000")
-    hp_cutoff.pack(fill="x")
-
-    def toggle_highpass():
-        nonlocal highpass_active
-        highpass_active = not highpass_active
-
-        hp_button.config(
-            text="Applied" if highpass_active else "Apply",
-            bg="#2E8B57" if highpass_active else ACCENT
-        )
-
-        if highpass_active:
-            print("Highpass activated:", hp_cutoff.get())
-        else:
-            print("Highpass deactivated")
-
-    hp_button = tk.Button(
-        hp_frame,
-        text="Apply",
-        bg=ACCENT,
-        fg="white",
-        command=toggle_highpass
-    )
-    hp_button.pack(pady=5)
 
 
     # BANDPASS--------------------------------------------------
@@ -340,11 +269,7 @@ def create_pipeline_frame(parent, engine):
 
         selection = filter_var.get()
 
-        if selection == "Low Pass":
-            lp_frame.pack(fill="x")
-        elif selection == "High Pass":
-            hp_frame.pack(fill="x")
-        elif selection == "Band Pass":
+        if selection == "Band Pass":
             bp_frame.pack(fill="x")
         elif selection == "Spectral Gate":
             spectralgate_frame.pack(fill="x")
