@@ -80,7 +80,7 @@ def eq_fkt(e32=0, e64=0, e125=0, e250=0, e500=0, e1k=0, e2k=0, e4k=0, e8k=0, e16
 
     return xs, ys
 
-def apply_eq(sig, sr, xs, ys, clamp_outside="hold"):
+def apply_eq_1(sig, sr, xs, ys, clamp_outside="hold"):
     """
     Wendet eine EQ-fkt (xs Frequenzen in Hz, ys Gain linear) im Frequenzbereich zeit sig an 
     
@@ -129,8 +129,46 @@ def apply_eq(sig, sr, xs, ys, clamp_outside="hold"):
     # Zurück in Zeitbereich
     eq_sig = np.fft.irfft(Y, n=n)
 
-
     return eq_sig
+
+def apply_eq(signal, sr, xs, ys):
+    """
+    signal: np.ndarray (N,) oder (N, 2)
+    xs: Frequenzen
+    ys: Gain (linear)
+    """
+
+    # Mono → (N,1)
+    if signal.ndim == 1:
+        signal = signal[:, np.newaxis]
+
+    N, channels = signal.shape
+    out = np.zeros_like(signal)
+
+    for ch in range(channels):
+        x = signal[:, ch]
+
+        # FFT
+        X = np.fft.rfft(x)
+
+        freqs = np.fft.rfftfreq(len(x), 1 / sr)
+
+        # Gain-Kurve auf FFT-Bins interpolieren
+        gains = np.interp(freqs, xs, ys)
+
+        # Anwenden
+        Y = X * gains
+
+        # IFFT
+        out[:, ch] = np.fft.irfft(Y, n=len(x))
+
+    # Mono wieder zurückgeben
+    if out.shape[1] == 1:
+        return out[:, 0]
+
+    return out
+
+
 
 #if __name__ == "__main__":
 #    eq_fkt(e32=0, e500=-12, e4k=6)

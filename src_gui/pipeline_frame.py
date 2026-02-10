@@ -188,6 +188,14 @@ def create_pipeline_frame(parent, engine):
                 text=f"{val:+.1f} dB",
                 fg="#3A7CA5" if val >= 0 else "#C94C4C"
             )
+            #Automatisches Anwenden der EQ-Änderungen bei Veränderung der Slider (nur wenn EQ aktiv ist)
+            if eq_active:
+                xs, ys = collect_eq_curve()
+                engine.set_equalizer(
+                    active=True,
+                    xs=xs,
+                    ys=ys
+                )
 
         #Slider
         slider = tk.Scale(
@@ -242,10 +250,41 @@ def create_pipeline_frame(parent, engine):
     reset_button.pack(pady=(0, 6))
 
 
+    #Werte aus den EQ-Slidern sammeln
+    def collect_eq_curve():
+        gains_db = [var.get() for var in eq_gains.values()]
+
+        from src.equalizer import eq_fkt
+        xs, ys = eq_fkt(
+            e32=gains_db[0],
+            e64=gains_db[1],
+            e125=gains_db[2],
+            e250=gains_db[3],
+            e500=gains_db[4],
+            e1k=gains_db[5],
+            e2k=gains_db[6],
+            e4k=gains_db[7],
+            e8k=gains_db[8],
+            e16k=gains_db[9],
+            do_plot=False
+        )
+        return xs, ys
+
+
     # Apply / Toggle Button
     def toggle_eq():
         nonlocal eq_active
         eq_active = not eq_active
+
+        if eq_active:
+            xs, ys = collect_eq_curve()
+            engine.set_equalizer(
+                active=True,
+                xs=xs,
+                ys=ys
+            )
+        else:
+            engine.set_equalizer(active=False)
 
         eq_button.config(
             text="Applied" if eq_active else "Apply",
@@ -260,6 +299,7 @@ def create_pipeline_frame(parent, engine):
         command=toggle_eq
     )
     eq_button.pack(pady=(8, 4))
+
 
 
     # Umschalten der sichtbaren Filter---------------------------------

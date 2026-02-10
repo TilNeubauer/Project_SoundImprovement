@@ -1,6 +1,8 @@
 from .audio_player import AudioPlayer
 from .bandpass import butter_bandpass_filter
 from .spectral_gate import noise_profile, spectral_gate
+from .bandpass import butter_bandpass_filter
+from .equalizer import apply_eq
 
 
 class AudioEngine:
@@ -23,10 +25,13 @@ class AudioEngine:
         self.bandpass_high = None
 
         #Spectral Gate Status
-        self.spectralgate_active = False
+        self.spectral_gate_active = False
         self.noise_profile = None
 
         #Equalizer Status
+        self.eq_active = False
+        self.eq_xs = None       #Frequenzen (HZ)
+        self.eq_ys = None       #Gain (dB)
 
 
     #Input laden
@@ -131,7 +136,7 @@ class AudioEngine:
    
          
 
-    #Bandpass von außen steuerbar machen
+    #Bandpass
     def set_bandpass(self, active: bool, low: float = None, high: float = None):
         self.bandpass_active = active
 
@@ -149,7 +154,7 @@ class AudioEngine:
         self.apply_processing()
 
 
-    #Spectral Gate von außen steuerbar machen
+    #Spectral Gate
     def set_spectral_gate(self, active: bool):
         self.spectral_gate_active = active
 
@@ -159,12 +164,22 @@ class AudioEngine:
         self.apply_processing()
 
 
-    #Equalizer von außen steuerbar machen
-    #.....
+    #Equalizer
+    def set_equalizer(self, active: bool, xs=None, ys=None):
+        self.eq_active = active
+
+        if xs is not None and ys is not None:
+            self.eq_xs = xs
+            self.eq_ys = ys
+
+        print("Equalizer:", "ON" if active else "OFF")
+
+        self.apply_processing()
+
+    
 
 
-
-     #Audio Prozessing anwenden (hier werden die Filter angewendet)
+    #Audio Prozessing anwenden (hier werden die Filter angewendet)
     def apply_processing(self):
         if self.input_signal is None:
             print("No input signal – cannot apply processing")
@@ -174,8 +189,6 @@ class AudioEngine:
 
         #Bandpass-Filter anwenden
         if self.bandpass_active:
-            from .bandpass import butter_bandpass_filter
-
             sig = butter_bandpass_filter(
                 sig,
                 self.bandpass_low,
@@ -202,9 +215,19 @@ class AudioEngine:
                 sig,
                 self.samplerate,
                 self.noise_profile
-    )
+                )
 
-        
+        #Equalizer anwenden
+        if self.eq_active and self.eq_xs is not None and self.eq_ys is not None:
+            sig = apply_eq(
+                sig,
+                self.samplerate,
+                self.eq_xs,
+                self.eq_ys
+            )
+
+
+
         #Output-Signal aktualisieren
         self.output_signal = sig
 
