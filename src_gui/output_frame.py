@@ -1,7 +1,16 @@
 import tkinter as tk
 from tkinter import filedialog
-from .config import BG_FRAME, FG_TEXT, SECTION_FONT, TEXT_FONT, ACCENT, topframeheight, BTN_ACTIVE, BTN_INACTIVE, BTN_PAUSE
-
+from src.plot import plot_waveform, plot_spectrum
+from .config import(
+    BG_FRAME, 
+    FG_TEXT, SECTION_FONT, 
+    TEXT_FONT, 
+    ACCENT, 
+    topframeheight, 
+    BTN_ACTIVE, 
+    BTN_INACTIVE, 
+    BTN_PAUSE
+)
 
 def create_output_frame(parent, engine):
 
@@ -25,21 +34,46 @@ def create_output_frame(parent, engine):
     ).pack(anchor="w", padx=10, pady=10)
 
     # Processed Plots---------------------------------------------
-    tk.Label(
-        frame,
-        text="[ Processed Waveform Placeholder ]",
-        bg="#000000",
-        fg=FG_TEXT,
-        height=8
-    ).pack(fill="x", padx=10, pady=(0, 8))
 
-    tk.Label(
-        frame,
-        text="[ Frequency Spectrum Placeholder ]",
-        bg="#000000",
-        fg=FG_TEXT,
-        height=8
-    ).pack(fill="x", padx=10)
+    # Waveform Diagram--------------------------------------------
+    waveform_container = tk.Frame(frame, bg="#000000", height=150)
+    waveform_container.pack(fill="x", padx=10, pady=(0, 8))
+    waveform_container.pack_propagate(False)
+
+    # Frequency Spectrum Diagram----------------------------------
+    spectrum_container = tk.Frame(frame, bg="#000000", height=150)
+    spectrum_container.pack(fill="x", padx=10)
+    spectrum_container.pack_propagate(False)
+
+    #Alte Plots entfernen
+    waveform_canvas = None
+    spectrum_canvas = None
+
+    def update_output_plots():
+        nonlocal waveform_canvas, spectrum_canvas
+
+        if not engine.has_output():
+            return
+
+        # Alte Plots entfernen
+        if waveform_canvas:
+            waveform_canvas.get_tk_widget().destroy()
+        if spectrum_canvas:
+            spectrum_canvas.get_tk_widget().destroy()
+
+        # Neue Plots
+        waveform_canvas = plot_waveform(
+            waveform_container,
+            engine.output_signal,
+            engine.samplerate
+        )
+
+        spectrum_canvas = plot_spectrum(
+            spectrum_container,
+            engine.output_signal,
+            engine.samplerate
+        )
+
 
     # Control Buttons---------------------------------------------
     controls = tk.Frame(frame, bg=BG_FRAME)
@@ -143,5 +177,8 @@ def create_output_frame(parent, engine):
     #     fg=FG_TEXT,
     #     justify="left"
     # ).pack(anchor="w", padx=10, pady=(0, 10))
+
+    #Output Update Callback setzen
+    engine.on_output_updated = update_output_plots
 
     return frame

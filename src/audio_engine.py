@@ -33,6 +33,9 @@ class AudioEngine:
         self.eq_xs = None       #Frequenzen (HZ)
         self.eq_ys = None       #Gain (dB)
 
+        #Plot-Update Callback
+        self.on_update_plots = None
+
 
     #Input laden
     def load_input(self, filepath):
@@ -133,8 +136,6 @@ class AudioEngine:
 
         print("Output passthrough built")
 
-   
-         
 
     #Bandpass
     def set_bandpass(self, active: bool, low: float = None, high: float = None):
@@ -175,8 +176,6 @@ class AudioEngine:
         print("Equalizer:", "ON" if active else "OFF")
 
         self.apply_processing()
-
-    
 
 
     #Audio Prozessing anwenden (hier werden die Filter angewendet)
@@ -227,7 +226,6 @@ class AudioEngine:
             )
 
 
-
         #Output-Signal aktualisieren
         self.output_signal = sig
 
@@ -235,6 +233,10 @@ class AudioEngine:
         self.output_player.samplerate = self.samplerate
         self.output_player.position = 0
         self.output_player.duration = len(sig) / self.samplerate
+
+
+        if self.on_output_updated:
+            self.on_output_updated()
 
 
 
