@@ -167,4 +167,10 @@ def spectral_gate(
         input_onesided=True                  # weil wir onesided STFT hatten
     )
 
+    if len(y_clean) != len(noisy):
+        if len(y_clean) > len(noisy):
+            y_clean = y_clean[0:len(noisy)]
+        else:
+            y_clean = np.pad(y_clean, (0, len(noisy) - len(y_clean)), mode="constant")
+
     return y_clean                           # fertiges, entrauschtes Signal
