@@ -128,14 +128,14 @@ def create_input_frame(parent, engine):
         )
 
         info_label.config(
-            text=f"Samplerate: {samplerate} Hz\nDauer: {minutes:02d}:{seconds:02d}"
+            text=f"Samplerate: {samplerate} Hz\nDuration: {minutes:02d}:{seconds:02d}"
         )
 
         # Audio in Engine laden
         engine.load_input(file_path)  
 
 
-        print("Audio geladen:", file_path)
+        print("Audio loaded:", file_path)
 
     # Import Button-----------------------------------------------
     tk.Button(
@@ -200,7 +200,7 @@ def create_input_frame(parent, engine):
     # Samplerate and Duration------------------------------------
     info_label = tk.Label(
         frame,
-        text="Samplerate: -\nDauer: -",
+        text="Samplerate: -\nDuration: -",
         font=TEXT_FONT,
         bg=BG_FRAME,
         fg=FG_TEXT,
@@ -211,7 +211,7 @@ def create_input_frame(parent, engine):
     # Filename and Size------------------------------------------
     file_label = tk.Label(
         frame,
-        text="Keine Datei geladen",
+        text="no file loaded",
         font=TEXT_FONT,
         bg=BG_FRAME,
         fg=FG_TEXT,
