@@ -1,0 +1,10 @@
+services:
+  gui:
+    image: mygui:latest
+    environment:
+      DISPLAY: ${DISPLAY}
+      XDG_RUNTIME_DIR: /mnt/wslg/runtime-dir
+      PULSE_SERVER: unix:/mnt/wslg/PulseServer
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
