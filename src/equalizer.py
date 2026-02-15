@@ -62,7 +62,7 @@ def eq_fkt(e32=0, e64=0, e125=0, e250=0, e500=0, e1k=0, e2k=0, e4k=0, e8k=0, e16
 
     # ---- Fit-fkt -----
     # Lin/logspace erstellen
-    xs = np.logspace(np.log10(32), np.log10(20000), 512)
+    xs = np.logspace(np.log10(31), np.log10(20000), 512)
 
     # PchipInterpolator
     freqs_log = np.log10(freqs)
